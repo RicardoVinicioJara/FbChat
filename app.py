@@ -6,6 +6,8 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 correo = "ups_uclqlhf_chatt@tfbnw.net"
 contra = "***123456789"
 #Envia = chat_hkaepat_ups@tfbnw.net
+
+#Connectamos al chatboot
 authenticator = IAMAuthenticator('U4IKxuhQ4XBIrskFYSLLqrB29b_A2fch9uL4gWQUZ-f4')
 assistant = AssistantV2(
     version='2018-09-20',
