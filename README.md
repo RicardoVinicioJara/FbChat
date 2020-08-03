@@ -7,8 +7,8 @@ Con la repuesta del Chatbot usamos en tercer servicio; * Text to Speech*, el cua
  
 
  
- ##Ejemplos de mensajes para interactuar con el chat
- ###Saludo
+ ## Ejemplos de mensajes para interactuar con el chat
+ ### Saludo
  - Good night
  - Good afternoon
  - How are you
@@ -16,18 +16,18 @@ Con la repuesta del Chatbot usamos en tercer servicio; * Text to Speech*, el cua
  - hello
  - Hi
  
- ###Matriculas
+ ### Matriculas
  - How do i enroll
  - Where i enroll
  - Enrollment information
  - What do I have to do to enroll
  
- ###Malla
+ ### Malla
 - What do I graduate from?
 - What subjects do I study?
 - What themes do you see?
 
- ###Precios
+ ### Precios
  - How much?
  - where do i see the prices
  - tuition value
