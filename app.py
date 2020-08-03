@@ -33,16 +33,16 @@ def traducir(text,language_translator):
 
 class EchoBot(Client):
    def onMessage(self, author_id, message_object, thread_id, thread_type, **kwargs):
-       self.markAsDelivered(thread_id, message_object.uid)
-       self.markAsRead(thread_id)
-       if author_id != self.uid:
-           msg = message_object.text
-           print(msg)
-           msg = traducir(msg, language_translator)
-           print(msg)
-           repuesta = mensaje(msg,session)
-           print(repuesta)
-           self.send(Message(text=repuesta), thread_id=thread_id, thread_type=thread_type)
+           self.markAsDelivered(thread_id, message_object.uid)
+           self.markAsRead(thread_id)
+           if author_id != self.uid:
+               msg = message_object.text
+               print(msg)
+               msg = traducir(msg, language_translator)
+               print(msg)
+               repuesta = mensaje(msg,session)
+               print(repuesta)
+               self.send(Message(text=repuesta), thread_id=thread_id, thread_type=thread_type)
 
 client = EchoBot(correo,contra)
 client.listen()
