@@ -1,5 +1,6 @@
 from fbchat import log, Client, Message
-from ibm_watson import AssistantV2, LanguageTranslatorV3
+from os.path import join, dirname
+from ibm_watson import AssistantV2, LanguageTranslatorV3, TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 correo = "ups_uclqlhf_chatt@tfbnw.net"
@@ -19,6 +20,10 @@ language_translator = LanguageTranslatorV3(
     authenticator=authenticatorT)
 language_translator.set_service_url('https://gateway.watsonplatform.net/language-translator/api')
 
+authenticatorV = IAMAuthenticator('rQkJz0iTpTyboZqk6SymQ2hh6zfG7sfmxdZBD9V9qQIV')
+service = TextToSpeechV1(authenticator=authenticatorV)
+service.set_service_url('https://stream.watsonplatform.net/text-to-speech/api')
+
 
 def mensaje(text, session):
     message = assistant.message("633359aa-4a7e-4cfa-8ebe-78113a86ad21",
@@ -31,18 +36,30 @@ def traducir(text,language_translator):
         text=text, model_id='en-es').get_result()
     return translation['translations'][0]['translation']
 
+def voz(text, service):
+    with open(join(dirname(__file__), 'output.mp3'),
+              'wb') as audio_file:
+        response = service.synthesize(
+            text, accept='audio/mp3',
+            voice="es-LA_SofiaV3Voice").get_result()
+        audio_file.write(response.content)
+
+
+
 class EchoBot(Client):
    def onMessage(self, author_id, message_object, thread_id, thread_type, **kwargs):
            self.markAsDelivered(thread_id, message_object.uid)
            self.markAsRead(thread_id)
            if author_id != self.uid:
-               msg = message_object.text
-               print(msg)
-               msg = traducir(msg, language_translator)
-               print(msg)
-               repuesta = mensaje(msg,session)
-               print(repuesta)
-               self.send(Message(text=repuesta), thread_id=thread_id, thread_type=thread_type)
+               messenger = message_object.text
+               print(messenger)
+               traduccion = traducir(messenger, language_translator)
+               print(traduccion)
+               respuesta = mensaje(traduccion,session)
+               print(respuesta)
+               voz(respuesta, service)
+               #self.send(Message(text=respuesta), thread_id=thread_id, thread_type=thread_type)
+               self.sendLocalVoiceClips('output.mp3',Message(text=respuesta),thread_id=thread_id, thread_type=thread_type)
 
 client = EchoBot(correo,contra)
 client.listen()
