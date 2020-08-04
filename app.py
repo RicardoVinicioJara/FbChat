@@ -97,8 +97,8 @@ def mensje():
 
 
 if __name__ == '__main__':
-    app.run()
-    #client = EchoBot(correo, contra)
-    #client.listen()
+    #app.run()
+    client = EchoBot(correo, contra)
+    client.listen()
 
 
