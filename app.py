@@ -1,3 +1,5 @@
+
+from flask import Flask, render_template, request
 from fbchat import log, Client, Message
 from os.path import join, dirname
 from ibm_watson import AssistantV2, LanguageTranslatorV3, TextToSpeechV1
@@ -6,15 +8,9 @@ import pymysql
 con = pymysql.connect( host="localhost", user="root", passwd="", db="preguntas")
 cursor = con.cursor(pymysql.cursors.DictCursor)
 
-
 correo = "ups_uclqlhf_chatt@tfbnw.net"
 contra = "***123456789"
 
-
-
-#Envia = chat_hkaepat_ups@tfbnw.net
-
-#Connectamos al chatboot
 authenticator = IAMAuthenticator('U4IKxuhQ4XBIrskFYSLLqrB29b_A2fch9uL4gWQUZ-f4')
 assistant = AssistantV2(
     version='2018-09-20',
@@ -39,6 +35,15 @@ def guardarPregunta(con, pregunta, respuesta, traducion):
                    (pregunta, respuesta, traducion))
     cursor.fetchall()
     con.commit()
+
+def buscarRespuesta(con, pregunta):
+    cursor = con.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT p.respuesta FROM preguntas p WHERE p.pregunta = %s",(pregunta))
+    res = cursor.fetchall()
+    ress = res[0]
+    con.commit()
+    return (ress['respuesta'])
+
 
 def mensaje(text, session):
     message = assistant.message("633359aa-4a7e-4cfa-8ebe-78113a86ad21",
@@ -77,6 +82,23 @@ class EchoBot(Client):
                #self.send(Message(text=respuesta), thread_id=thread_id, thread_type=thread_type)
                self.sendLocalVoiceClips('output.mp3',Message(text=respuesta),thread_id=thread_id, thread_type=thread_type)
 
-client = EchoBot(correo,contra)
-client.listen()
+
+app = Flask(__name__)
+@app.route('/')
+def hello_world():
+    return render_template('index.html')
+
+@app.route('/msg', methods=['POST'])
+def mensje():
+    if request.method == 'POST':
+        mensaje = request.form['mensaje']
+        mensaje = buscarRespuesta(con, mensaje)
+        return render_template('index.html', msg=mensaje)
+
+
+if __name__ == '__main__':
+    app.run()
+    #client = EchoBot(correo, contra)
+    #client.listen()
+
 

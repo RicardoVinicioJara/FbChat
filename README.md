@@ -6,6 +6,7 @@ El examen costa de un sistema desarropo en Python que se conecta a Messenger y q
 
 Con la repuesta del Chatbot usamos en tercer servicio; * Text to Speech*, el cual nos devuelve un audio con el texto enviado, en este caso seria la repuesta del Chatbot, finalmente retornamos este audio al Messenger. 
 
+* Para mostrar los mensajes usaremos un mensaje una aplicacion den flaks que simulara el mesenger
 ## SE
 Para el examen de sistemas expertos, iremos entrando un sistema para que de acuerdo a los mensajes enviado por 
 Messenger y definiendo las repuestas por parte del Chatbot, y así cuando ya no se desee implementar o no se 
