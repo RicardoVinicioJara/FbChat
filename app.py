@@ -2,9 +2,16 @@ from fbchat import log, Client, Message
 from os.path import join, dirname
 from ibm_watson import AssistantV2, LanguageTranslatorV3, TextToSpeechV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+import pymysql
+con = pymysql.connect( host="localhost", user="root", passwd="", db="preguntas")
+cursor = con.cursor(pymysql.cursors.DictCursor)
+
 
 correo = "ups_uclqlhf_chatt@tfbnw.net"
 contra = "***123456789"
+
+
+
 #Envia = chat_hkaepat_ups@tfbnw.net
 
 #Connectamos al chatboot
@@ -26,6 +33,12 @@ authenticatorV = IAMAuthenticator('rQkJz0iTpTyboZqk6SymQ2hh6zfG7sfmxdZBD9V9qQIV'
 service = TextToSpeechV1(authenticator=authenticatorV)
 service.set_service_url('https://stream.watsonplatform.net/text-to-speech/api')
 
+def guardarPregunta(con, pregunta, respuesta, traducion):
+    cursor = con.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("INSERT INTO preguntas(id, pregunta, respuesta, traducion) VALUES (0,%s,%s,%s)",
+                   (pregunta, respuesta, traducion))
+    cursor.fetchall()
+    con.commit()
 
 def mensaje(text, session):
     message = assistant.message("633359aa-4a7e-4cfa-8ebe-78113a86ad21",
@@ -60,6 +73,7 @@ class EchoBot(Client):
                respuesta = mensaje(traduccion,session)
                print(respuesta)
                voz(respuesta, service)
+               guardarPregunta(con,messenger,respuesta,traduccion)
                #self.send(Message(text=respuesta), thread_id=thread_id, thread_type=thread_type)
                self.sendLocalVoiceClips('output.mp3',Message(text=respuesta),thread_id=thread_id, thread_type=thread_type)
 
